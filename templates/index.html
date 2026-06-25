@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1225; min-height: 100vh; display: flex; justify-content: center; padding: 2rem 1rem; }
+        .container { width: 340px; }
+        .header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
+        .header span { font-size: 15px; font-weight: 500; color: #c5cae9; }
+        .search-bar { display: flex; gap: 8px; margin-bottom: 1.5rem; }
+        .search-bar input { flex: 1; background: #252b45; border: none; border-radius: 12px; padding: 11px 14px; color: #fff; font-size: 14px; outline: none; }
+        .search-bar input::placeholder { color: #8891b4; }
+        .search-bar button { background: #4a5de8; border: none; border-radius: 12px; padding: 11px 18px; color: white; font-size: 14px; font-weight: 500; cursor: pointer; }
+        .main-card { background: #252b45; border-radius: 20px; padding: 1.5rem; margin-bottom: 12px; }
+        .city-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+        .city-row span { font-size: 13px; color: #8891b4; }
+        .temp-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+        .temp { font-size: 52px; font-weight: 600; color: #fff; line-height: 1; }
+        .desc { font-size: 13px; color: #8891b4; margin-top: 6px; }
+        .details { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .detail { background: #1a1f35; border-radius: 12px; padding: 10px 12px; }
+        .detail-label { font-size: 10px; color: #8891b4; margin-bottom: 4px; }
+        .detail-value { font-size: 15px; font-weight: 500; color: #fff; }
+        .forecast-card { background: #252b45; border-radius: 20px; padding: 1.25rem; }
+        .forecast-title { font-size: 11px; color: #8891b4; margin-bottom: 12px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .forecast-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #1a1f35; }
+        .forecast-item:last-child { border-bottom: none; }
+        .forecast-day { font-size: 13px; color: #c5cae9; width: 36px; }
+        .forecast-desc { font-size: 12px; color: #8891b4; flex: 1; text-align: center; }
+        .forecast-temp { font-size: 13px; font-weight: 500; color: #fff; }
+        .error { background: #3d1f2e; border-radius: 12px; padding: 12px 16px; color: #f87171; font-size: 14px; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7b8cde" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/></svg>
+        <span>Weather App</span>
+    </div>
+
+    <form method="POST" class="search-bar">
+        <input type="text" name="city" placeholder="Enter city name..." value="{{ city or '' }}">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if error %}
+    <div class="error">City not found. Please try again.</div>
+    {% endif %}
+
+    {% if weather %}
+    <div class="main-card">
+        <div class="city-row">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b8cde" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>{{ weather.city }}</span>
+        </div>
+        <div class="temp-row">
+            <div>
+                <p class="temp">{{ weather.temp }}°</p>
+                <p class="desc">{{ weather.description }}</p>
+            </div>
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </div>
+        <div class="details">
+            <div class="detail">
+                <p class="detail-label">Feels like</p>
+                <p class="detail-value">{{ weather.feels_like }}°C</p>
+            </div>
+            <div class="detail">
+                <p class="detail-label">Humidity</p>
+                <p class="detail-value">{{ weather.humidity }}%</p>
+            </div>
+            <div class="detail">
+                <p class="detail-label">Wind</p>
+                <p class="detail-value">{{ weather.wind }} km/h</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="forecast-card">
+        <p class="forecast-title">5-day forecast</p>
+        {% for item in forecast %}
+        <div class="forecast-item">
+            <span class="forecast-day">{{ item.date }}</span>
+            <span class="forecast-desc">{{ item.desc }}</span>
+            <span class="forecast-temp">{{ item.temp }}°C</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>

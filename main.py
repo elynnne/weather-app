@@ -17,5 +17,16 @@ if data["cod"] == 200:
     print(f"🌬️  Feels like: {feels_like}°C")
     print(f"💧 Humidity: {humidity}%")
     print(f"☁️ Description: {description}")
+
+    forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={API_KEY}&units=metric&cnt=5"
+    forecast_response = requests.get(forecast_url)
+    forecast_data = forecast_response.json()
+
+    print(f"\n📅 5-Day Forecast for {city}:")
+    for item in forecast_data["list"]:
+        date = item["dt_txt"]
+        temp_f = item["main"]["temp"]
+        desc_f= item["weather"][0]["description"]
+        print(f"{date}: {temp_f}°C, {desc_f}")
 else:
     print("City not found try again please.")
